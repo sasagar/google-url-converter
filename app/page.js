@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useState, useRef } from "react";
 
 import FluentConvertRange24Regular from "./components/convert";
 import MaterialSymbolsContentCopyOutline from "./components/copy";
@@ -8,8 +8,7 @@ import MaterialSymbolsContentCopyOutline from "./components/copy";
 export default function Home() {
   const fromURL = useRef(null);
   const toURL = useRef(null);
-  const flag = useRef(null);
-  flag.current.setAttribute("disabled", true);
+  const [disable, setDisable] = useState(true);
 
   const handler = () => {
     const from = fromURL.current.value;
@@ -22,11 +21,10 @@ export default function Home() {
       const newFrom = from.replace(/file\/d\//, 'uc?id=').replace(/\/view.*/, '');
 
       toURL.current.value = newFrom;
-      flag.current.removeAttribute("disabled");
+      setDisable(false);
     } catch (err) {
-      flag.current.setAttribute("disabled", true);
+      setDisable(true);
       toURL.current.value = "URLの形式が正しくないようです。もう一度確認して下さい。";
-      console.log(flag.current)
     }
   }
   const copyHandler = () => {
@@ -67,7 +65,7 @@ export default function Home() {
             active:bg-indigo-400 disabled:cursor-not-allowed transition-all
             px-3 py-2 rounded-md border border-indigo-500 flex gap-2 items-center"
             onClick={copyHandler}
-            ref={flag}>
+            disabled={disable}>
             <MaterialSymbolsContentCopyOutline /> コピーする！
           </button>
         </div>
